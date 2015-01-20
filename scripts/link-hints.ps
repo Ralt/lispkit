@@ -1,0 +1,44 @@
+(in-package #:lispkit.link-hints)
+
+(defun qsa (context selector)
+  "Alias of document.querySelectorAll"
+  (chain context (query-selector-all selector)))
+
+(defun filter (function array)
+  "Reimplementation of Array.prototype.filter"
+  (loop for el in array
+       when (funcall function el)
+       collect el))
+
+(defun is-in-viewport (el)
+  "Finds out if an element is in the viewport"
+  (let ((rect (chain el (getBoundingClientRect))))
+    (and
+     (>= (@ rect top) 0)
+     (>= (@ rect left) 0)
+     (<= (@ rect bottom) (or (@ window inner-height)
+			     (@ document document-element client-height)))
+     (<= (@ rect right) (or (@ window inner-width)
+			    (@ document document-element client-width))))))
+
+(defun find-links (window document)
+  "Finds all the links within the viewport"
+  (filter #'is-in-viewport (qsa document "a")))
+
+(defun add-hints (links)
+  "Adds hints on links"
+  (mapcar #'add-hint links))
+
+(defun add-hint (link)
+  "Adds a hint on a single link"
+  nil)
+
+(defun add-hints-handler (window hints)
+  "Adds a global handler to select to correct hint"
+  nil)
+
+(defun init ()
+  "Initializes the link hints"
+  (add-hints-handler window (add-hints (find-links window document))))
+
+(init)

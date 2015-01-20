@@ -14,3 +14,11 @@
            #:keymaps
            #:handle-key
            #:defcommand))
+
+(defpackage lispkit.link-hints
+  (:use :parenscript :common-lisp))
+
+(setf (ps:ps-package-prefix :lispkit.link-hints) "_lispkit_link_hints_")
+
+(defpackage lispkit.jsdom
+  (:intern document window))
